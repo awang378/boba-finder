@@ -2,43 +2,45 @@ import React, { Component } from "react";
 import GoogleMapReact from "google-map-react";
 import keys from "../keys";
 
-//const SG_COOR = { lat: 1.3521, lng: 103.8198 };
-
 class MapContainer extends Component {
-  // Runs once when the Google Maps library is ready
-  // Initializes all services that we need
+  static defaultProps = {
+    center: {
+      lat: 34.028927,
+      lng: -84.198578,
+    },
+    zoom: 11,
+  };
   apiHasLoaded = (map, mapsApi) => {
     this.setState({
-      mapsLoaded: true,
-      map,
+      //mapsLoaded: true,
+      //map,
       mapsApi,
       //singaporeLatLng: new mapsApi.LatLng(SG_COOR.lat, SG_COOR.lng),
-      //autoCompleteService: new mapsApi.places.AutocompleteService(),
-      //placesService: new mapsApi.places.PlacesService(map),
+      autoCompleteService: new mapsApi.places.AutocompleteService(),
+      placesService: new mapsApi.places.PlacesService(map),
       //geoCoderService: new mapsApi.Geocoder(),
       //directionService: new mapsApi.DirectionsService(),
     });
   };
+
   render() {
     return (
-      <section className="h-lg">
-        <GoogleMapReact
-          boostrapURLkeys={{
-            key: keys.key,
-            libraries: ["places", "directions"],
-          }}
-          defaultZoom={11}
-          defaultCenter={{ lat: 34.028927, lng: -84.198578 }}
-          yesIWantToUseGoogleMapApiInternals={true}
-          onGoogleApiLoaded={({ map, maps }) => this.apiHasLoaded(map, maps)}
-        ></GoogleMapReact>
-      </section>
+      <div className="w-100 d-flex py-4 flex-wrap justify-content-center">
+        <h1 className="w-100 fw-md">Get some Boba!</h1>
+        <div className="GMapReact" style={{ height: "50vh", width: "100%" }}>
+          <GoogleMapReact
+            bootstrapURLKeys={{
+              key: keys.key,
+              libraries: ["places", "directions"],
+            }}
+            defaultCenter={this.props.center}
+            defaultZoom={this.props.zoom}
+            yesIWantToUseGoogleMapApiInternals={true}
+            onGoogleApiLoaded={({ map, maps }) => this.apiHasLoaded(map, maps)}
+          ></GoogleMapReact>
+        </div>
+      </div>
     );
   }
 }
-/*
-const mapStyle = {
-  height: "35rem",
-}; */
-
 export default MapContainer;
