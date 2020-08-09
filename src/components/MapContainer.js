@@ -3,7 +3,7 @@ import GoogleMapReact from "google-map-react";
 import MapAutoComplete from "./MapAutoComplete";
 import HomeMarker from "./HomeMarker";
 import MapMarker from "./MapMarker";
-import { Button } from "antd";
+import SearchButton from "./SearchButton";
 import keys from "../keys";
 
 const coord = { lat: 34.028927, lng: -84.198578 };
@@ -36,6 +36,7 @@ class MapContainer extends Component {
       directionService: new mapsApi.DirectionsService(),
     });
   };
+
   updateCurrentUserLatLng = (pos) => {
     const { mapsApi } = this.state;
     this.setState({
@@ -54,8 +55,11 @@ class MapContainer extends Component {
     const {
       mapsLoaded,
       map,
+      mapsApi,
       autoCompleteService,
       geoCoderService,
+      placesService,
+      directionService,
       currentUserLatLng,
     } = this.state;
     return (
@@ -81,13 +85,12 @@ class MapContainer extends Component {
                 updateCurrentUserLatLng={this.updateCurrentUserLatLng}
                 //mapsLoaded={this.state.mapsLoaded}
               />
-              <Button
-                type="primary"
-                //onClick={this.handleSearch}
-                //disabled={!this.state.mapsLoaded}
-              >
-                Find Boba
-              </Button>
+              <SearchButton
+                currentUserLatLng={currentUserLatLng}
+                mapsApi={mapsApi}
+                placesService={placesService}
+                directionService={directionService}
+              />
             </div>
           ) : null}
           <div

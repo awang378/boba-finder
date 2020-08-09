@@ -6,18 +6,16 @@ class MapAutoComplete extends Component {
     super(props);
     this.state = {
       map: this.props.map,
-      //mapsApi: this.props.mapsApi,
       suggestions: [],
       options: [],
       updateCurrentUserLatLng: this.props.updateCurrentUserLatLng,
       autoCompleteService: this.props.autoCompleteService,
       geoCoderService: this.props.geoCoderService,
-      //mapsLoaded: this.props.mapsLoaded,
       currentUserLatLng: this.props.currentUserLatLng,
     };
   }
 
-  // Geoencode searched result into marker
+  // Geoencode searched result into marker and zoom to user location
   onSelect = (value) => {
     const { map } = this.state;
     this.state.geoCoderService.geocode({ address: value }, (response) => {
@@ -71,7 +69,7 @@ class MapAutoComplete extends Component {
           options={options}
           onSearch={this.onSearch}
           onSelect={this.onSelect}
-          placeholder="Enter Your Address"
+          placeholder="Enter where you are"
           //disabled={!this.props.mapsLoaded}
         />
       </div>
