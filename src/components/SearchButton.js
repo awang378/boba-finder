@@ -7,25 +7,25 @@ class SearchButton extends Component {
     this.state = {
       mapsApi: this.props.mapsApi,
       placesService: this.props.placesService,
-      currentUserLatLng: this.props.currentUserLatLng,
       directionService: this.props.directionService,
-      searchResults: [],
     };
   }
 
   handleSearch = () => {
-    const {
-      mapsApi,
-      placesService,
-      currentUserLatLng,
-      directionService,
-    } = this.state;
+    const { mapsApi, placesService, directionService } = this.state;
     const results = [];
+    console.log(this.props.currentUserLatLng.lat());
 
     // Places Request
     const placesRequest = {
-      location: currentUserLatLng,
-      type: ["restaurant", "cafe", "food"],
+      location: this.props.currentUserLatLng,
+      type: [
+        "restaurant",
+        "cafe",
+        "food",
+        "point_of_interest",
+        "establishment",
+      ],
       query: "boba, bubble tea, milk tea",
       rankBy: mapsApi.places.RankBy.DISTANCE,
     };
@@ -35,21 +35,22 @@ class SearchButton extends Component {
       const responseLimit = Math.min(9, response.length);
       for (let i = 0; i < responseLimit; i++) {
         const bobaPlace = response[i];
-        const { name, rating, price_level, url } = bobaPlace;
+        console.log(bobaPlace);
+        const { name, rating, price_level, formatted_phone_number } = bobaPlace;
         const address = bobaPlace.formatted_address;
-        let openNow = false;
+        //let openNow = false;
         let photoUrl = "";
-
+        /*
         if (bobaPlace.opening_hours) {
           openNow = bobaPlace.opening_hours.open_now;
-        }
+        } */
         if (bobaPlace.photos && bobaPlace.photos.length > 0) {
           photoUrl = bobaPlace.photos[0].getUrl();
         }
 
         // Use Directions API to find travel distance and approx time
         const directionRequest = {
-          origin: currentUserLatLng,
+          origin: this.props.currentUserLatLng,
           destination: address,
           travelMode: "DRIVING",
         };
@@ -65,13 +66,13 @@ class SearchButton extends Component {
             name,
             rating,
             address,
-            openNow,
+            //openNow,
             price_level,
             photoUrl,
             distanceText,
             timeText,
-            url,
           });
+          this.props.updateSearchResults(results);
         });
 
         /* 
@@ -81,8 +82,6 @@ class SearchButton extends Component {
                 place.name,
                 place.place_id
               );*/
-
-        this.setState({ searchResults: results });
       }
     });
   };

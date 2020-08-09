@@ -3,8 +3,11 @@ import GoogleMapReact from "google-map-react";
 import MapAutoComplete from "./MapAutoComplete";
 import HomeMarker from "./HomeMarker";
 import MapMarker from "./MapMarker";
+import PlaceCard from "./PlaceCard";
 import SearchButton from "./SearchButton";
 import keys from "../keys";
+
+import { Divider } from "antd";
 
 const coord = { lat: 34.028927, lng: -84.198578 };
 
@@ -21,6 +24,7 @@ class MapContainer extends Component {
       placesService: {},
       geoCoderService: {},
       directionService: {},
+      searchResults: [],
     };
   }
 
@@ -44,6 +48,10 @@ class MapContainer extends Component {
     });
   };
 
+  updateSearchResults = (results) => {
+    this.setState({ searchResults: results });
+  };
+
   addSingleMarker = (lat, lng, name, id) => {
     const markers = new Map();
     markers.set(id, { lat, lng, name, id });
@@ -60,11 +68,12 @@ class MapContainer extends Component {
       geoCoderService,
       placesService,
       directionService,
-      currentUserLatLng,
+      //currentUserLatLng,
+      searchResults,
     } = this.state;
     return (
       <div className="MapContainer">
-        <section className="w-100 d-flex py-4 flex-wrap justify-content-center">
+        <div className="w-100 d-flex py-4 flex-wrap justify-content-center">
           <h1 className="w-100 fw-md">Get some Boba!</h1>
           {mapsLoaded ? (
             <div
@@ -76,7 +85,7 @@ class MapContainer extends Component {
               }}
             >
               <MapAutoComplete
-                currentUserLatLng={currentUserLatLng}
+                currentUserLatLng={this.state.currentUserLatLng}
                 autoCompleteService={autoCompleteService}
                 geoCoderService={geoCoderService}
                 //mapsApi={this.state.mapsApi}
@@ -86,10 +95,11 @@ class MapContainer extends Component {
                 //mapsLoaded={this.state.mapsLoaded}
               />
               <SearchButton
-                currentUserLatLng={currentUserLatLng}
+                currentUserLatLng={this.state.currentUserLatLng}
                 mapsApi={mapsApi}
                 placesService={placesService}
                 directionService={directionService}
+                updateSearchResults={this.updateSearchResults}
               />
             </div>
           ) : null}
@@ -122,7 +132,21 @@ class MapContainer extends Component {
               ))}
             </GoogleMapReact>
           </div>
-        </section>
+          {/* Results section */}
+          {searchResults.length > 0 ? (
+            <>
+              <Divider />
+              <div className="d-flex flex-column justify-content-center">
+                <h1 className="mb-4 fw-md">Boba Near You!</h1>
+                <div className="col-sm d-flex flex-wrap">
+                  {searchResults.map((result) => (
+                    <PlaceCard info={result} />
+                  ))}
+                </div>
+              </div>
+            </>
+          ) : null}
+        </div>
       </div>
     );
   }

@@ -8,7 +8,6 @@ class MapAutoComplete extends Component {
       map: this.props.map,
       suggestions: [],
       options: [],
-      updateCurrentUserLatLng: this.props.updateCurrentUserLatLng,
       autoCompleteService: this.props.autoCompleteService,
       geoCoderService: this.props.geoCoderService,
       currentUserLatLng: this.props.currentUserLatLng,
