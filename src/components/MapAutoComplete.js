@@ -25,6 +25,7 @@ class MapAutoComplete extends Component {
       this.props.addSingleMarker(lat, lng, value, response[0].place_id);
       map.panTo(pos);
       this.props.updateCurrentUserLatLng(pos);
+      this.props.searchLoaded();
     });
   };
 

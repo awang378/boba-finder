@@ -19,6 +19,7 @@ class MapContainer extends Component {
       markers: new Map(),
       map: {},
       mapsApi: {},
+      searchLoaded: false,
       autoCompleteService: {},
       currentUserLatLng: {},
       placesService: {},
@@ -52,6 +53,10 @@ class MapContainer extends Component {
     this.setState({ searchResults: results });
   };
 
+  searchHasLoaded = () => {
+    this.setState({ searchLoaded: true });
+  };
+
   addSingleMarker = (lat, lng, name, id) => {
     const markers = new Map();
     markers.set(id, { lat, lng, name, id });
@@ -68,7 +73,6 @@ class MapContainer extends Component {
       geoCoderService,
       placesService,
       directionService,
-      //currentUserLatLng,
       searchResults,
     } = this.state;
     return (
@@ -81,7 +85,8 @@ class MapContainer extends Component {
               style={{
                 display: "flex",
                 flexDirection: "row",
-                padding: "0.5rem 0rem",
+                padding: "0.5rem 0rem 1.0rem 5.0rem ",
+                alignItems: "center",
               }}
             >
               <MapAutoComplete
@@ -89,6 +94,7 @@ class MapContainer extends Component {
                 autoCompleteService={autoCompleteService}
                 geoCoderService={geoCoderService}
                 //mapsApi={this.state.mapsApi}
+                searchLoaded={this.searchHasLoaded}
                 map={map}
                 addSingleMarker={this.addSingleMarker}
                 updateCurrentUserLatLng={this.updateCurrentUserLatLng}
@@ -97,6 +103,7 @@ class MapContainer extends Component {
               <SearchButton
                 currentUserLatLng={this.state.currentUserLatLng}
                 mapsApi={mapsApi}
+                searchLoaded={this.state.searchLoaded}
                 placesService={placesService}
                 directionService={directionService}
                 updateSearchResults={this.updateSearchResults}
@@ -136,9 +143,9 @@ class MapContainer extends Component {
           {searchResults.length > 0 ? (
             <>
               <Divider />
-              <div className="d-flex flex-column justify-content-center">
+              <div className="d-flex flex-column container-fluid justify-content-center">
                 <h1 className="mb-4 fw-md">Boba Near You!</h1>
-                <div className="col-sm d-flex flex-wrap">
+                <div className="d-flex flex-wrap container-fluid">
                   {searchResults.map((result) => (
                     <PlaceCard info={result} />
                   ))}

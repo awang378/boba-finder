@@ -1,9 +1,9 @@
 import React from "react";
-import "bootstrap/dist/css/bootstrap.min.css";
+import "../node_modules/bootstrap/dist/css/bootstrap.min.css";
+import "../node_modules/antd/dist/antd.css";
 import "./App.css";
 import MapContainer from "./components/MapContainer";
 import Header from "./components/Header";
-import "antd/dist/antd.css";
 
 function App() {
   return (

@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Button } from "antd";
+import { Button, message } from "antd";
 
 class SearchButton extends Component {
   constructor(props) {
@@ -12,9 +12,15 @@ class SearchButton extends Component {
   }
 
   handleSearch = () => {
+    if (!this.props.searchLoaded) {
+      const config = {
+        content: "Please enter a location.",
+      };
+      message.error(config);
+      return;
+    }
     const { mapsApi, placesService, directionService } = this.state;
     const results = [];
-    console.log(this.props.currentUserLatLng.lat());
 
     // Places Request
     const placesRequest = {
@@ -36,7 +42,7 @@ class SearchButton extends Component {
       for (let i = 0; i < responseLimit; i++) {
         const bobaPlace = response[i];
         console.log(bobaPlace);
-        const { name, rating, price_level, formatted_phone_number } = bobaPlace;
+        const { name, rating, price_level } = bobaPlace;
         const address = bobaPlace.formatted_address;
         //let openNow = false;
         let photoUrl = "";
