@@ -146,8 +146,8 @@ class MapContainer extends Component {
               <div className="d-flex flex-column container-fluid justify-content-center">
                 <h1 className="mb-4 fw-md">Boba Near You!</h1>
                 <div className="d-flex flex-wrap container-fluid">
-                  {searchResults.map((result) => (
-                    <PlaceCard info={result} />
+                  {searchResults.map((result, key) => (
+                    <PlaceCard info={result} key={key} />
                   ))}
                 </div>
               </div>

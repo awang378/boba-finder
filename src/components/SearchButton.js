@@ -41,11 +41,11 @@ class SearchButton extends Component {
       const responseLimit = Math.min(9, response.length);
       for (let i = 0; i < responseLimit; i++) {
         const bobaPlace = response[i];
-        console.log(bobaPlace);
-        const { name, rating, price_level } = bobaPlace;
+        const { name, rating, place_id } = bobaPlace;
         const address = bobaPlace.formatted_address;
         //let openNow = false;
         let photoUrl = "";
+
         /*
         if (bobaPlace.opening_hours) {
           openNow = bobaPlace.opening_hours.open_now;
@@ -68,17 +68,45 @@ class SearchButton extends Component {
           const travelRoute = result.routes[0].legs[0];
           const timeText = travelRoute.duration.text;
           const distanceText = travelRoute.distance.text;
-          results.push({
-            name,
-            rating,
-            address,
-            //openNow,
-            price_level,
-            photoUrl,
-            distanceText,
-            timeText,
+
+          // Get additional details for palces
+          const placeDetails = {
+            fields: [
+              "url",
+              "opening_hours",
+              "formatted_phone_number",
+              "utc_offset_minutes",
+            ],
+            placeId: place_id,
+          };
+
+          placesService.getDetails(placeDetails, (result, status) => {
+            if (status !== "OK") {
+              return;
+            }
+            const bobaDetails = result;
+            const {
+              url,
+              formatted_phone_number,
+              user_ratings_total,
+              opening_hours,
+            } = bobaDetails;
+            const isOpen = opening_hours.isOpen();
+            console.log(isOpen);
+            results.push({
+              name,
+              rating,
+              address,
+              url,
+              user_ratings_total,
+              formatted_phone_number,
+              isOpen,
+              photoUrl,
+              distanceText,
+              timeText,
+            });
+            this.props.updateSearchResults(results);
           });
-          this.props.updateSearchResults(results);
         });
 
         /* 
