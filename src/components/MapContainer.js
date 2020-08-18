@@ -139,12 +139,13 @@ class MapContainer extends Component {
               ))}
             </GoogleMapReact>
           </div>
+
           {/* Results section */}
           {searchResults.length > 0 ? (
             <>
               <Divider />
               <div className="d-flex flex-column container-fluid justify-content-center">
-                <h1 className="mb-4 fw-md">Boba Near You!</h1>
+                <h1 className="w-100 fw-md">Boba Near You!</h1>
                 <div className="d-flex flex-wrap container-fluid">
                   {searchResults.map((result, key) => (
                     <PlaceCard info={result} key={key} />

@@ -32,24 +32,20 @@ class SearchButton extends Component {
         "point_of_interest",
         "establishment",
       ],
-      query: "boba, bubble tea, milk tea",
+      keyword: "boba, bubble tea, milk tea",
       rankBy: mapsApi.places.RankBy.DISTANCE,
     };
 
     // Search for Boba Places with Places API
-    placesService.textSearch(placesRequest, (response) => {
+    placesService.nearbySearch(placesRequest, (response, status) => {
       const responseLimit = Math.min(9, response.length);
+      console.log(response);
       for (let i = 0; i < responseLimit; i++) {
         const bobaPlace = response[i];
         const { name, rating, place_id } = bobaPlace;
-        const address = bobaPlace.formatted_address;
-        //let openNow = false;
+        const address = bobaPlace.vicinity;
         let photoUrl = "";
 
-        /*
-        if (bobaPlace.opening_hours) {
-          openNow = bobaPlace.opening_hours.open_now;
-        } */
         if (bobaPlace.photos && bobaPlace.photos.length > 0) {
           photoUrl = bobaPlace.photos[0].getUrl();
         }
@@ -80,6 +76,7 @@ class SearchButton extends Component {
             placeId: place_id,
           };
 
+          // Get additional details for certain shop fields
           placesService.getDetails(placeDetails, (result, status) => {
             if (status !== "OK") {
               return;
@@ -92,7 +89,6 @@ class SearchButton extends Component {
               opening_hours,
             } = bobaDetails;
             const isOpen = opening_hours.isOpen();
-            console.log(isOpen);
             results.push({
               name,
               rating,

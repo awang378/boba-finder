@@ -1,5 +1,5 @@
 import React from "react";
-//import { Rate } from "antd";
+import { Rate } from "antd";
 
 const PlaceCard = ({ info, key }) => {
   const {
@@ -39,6 +39,16 @@ const PlaceCard = ({ info, key }) => {
           <span className="d-block">
             <a href={url}>Google Page</a>
           </span>
+          <ul className="list-group list-group-flush">
+            {isOpen ? (
+              <li className="list-group-item">Open</li>
+            ) : (
+              <li className="list-group-item">Closed</li>
+            )}
+            <li className="list-group-item">
+              Rating - <Rate allowHalf value={rating} />
+            </li>
+          </ul>
         </div>
       </div>
     </div>
