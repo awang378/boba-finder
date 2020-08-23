@@ -22,6 +22,8 @@ class SearchButton extends Component {
     const { mapsApi, placesService, directionService } = this.state;
     const results = [];
 
+    this.props.clearMarkers();
+
     // Places Request
     const placesRequest = {
       location: this.props.currentUserLatLng,
@@ -38,10 +40,10 @@ class SearchButton extends Component {
 
     // Search for Boba Places with Places API
     placesService.nearbySearch(placesRequest, (response, status) => {
-      const responseLimit = Math.min(9, response.length);
-      console.log(response);
+      const responseLimit = Math.min(12, response.length);
       for (let i = 0; i < responseLimit; i++) {
         const bobaPlace = response[i];
+        let { location } = response[i].geometry;
         const { name, rating, place_id } = bobaPlace;
         const address = bobaPlace.vicinity;
         let photoUrl = "";
@@ -64,6 +66,8 @@ class SearchButton extends Component {
           const travelRoute = result.routes[0].legs[0];
           const timeText = travelRoute.duration.text;
           const distanceText = travelRoute.distance.text;
+
+          this.props.addPlaces(location.lat(), location.lng(), name, place_id);
 
           // Get additional details for palces
           const placeDetails = {
@@ -104,24 +108,12 @@ class SearchButton extends Component {
             this.props.updateSearchResults(results);
           });
         });
-
-        /* 
-        this.addMarker(
-                place.geometry.location.lat(),
-                place.geometry.location.lng(),
-                place.name,
-                place.place_id
-              );*/
       }
     });
   };
   render() {
     return (
-      <Button
-        type="primary"
-        onClick={this.handleSearch}
-        //disabled={!this.state.mapsLoaded}
-      >
+      <Button type="primary" onClick={this.handleSearch}>
         Find Boba
       </Button>
     );

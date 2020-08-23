@@ -2,12 +2,11 @@ import React, { Component } from "react";
 import GoogleMapReact from "google-map-react";
 import MapAutoComplete from "./MapAutoComplete";
 import HomeMarker from "./HomeMarker";
-import MapMarker from "./MapMarker";
+import PlaceMarker from "./PlaceMarker";
 import PlaceCard from "./PlaceCard";
 import SearchButton from "./SearchButton";
-import keys from "../keys";
-
 import { Divider } from "antd";
+import keys from "../keys";
 
 const coord = { lat: 34.028927, lng: -84.198578 };
 
@@ -26,6 +25,7 @@ class MapContainer extends Component {
       geoCoderService: {},
       directionService: {},
       searchResults: [],
+      placeMarkers: [],
     };
   }
 
@@ -47,6 +47,18 @@ class MapContainer extends Component {
     this.setState({
       currentUserLatLng: new mapsApi.LatLng(pos.lat, pos.lng),
     });
+  };
+
+  addPlaces = (lat, lng, name, id) => {
+    const prevMarkers = this.state.placeMarkers;
+    const placeMarkers = Object.assign([], prevMarkers);
+    placeMarkers.push({ lat, lng, name, id });
+    console.log(`Added new "${name}" Marker`);
+    this.setState({ placeMarkers });
+  };
+
+  clearMarkers = () => {
+    this.setState({ placeMarkers: [] });
   };
 
   updateSearchResults = (results) => {
@@ -93,20 +105,20 @@ class MapContainer extends Component {
                 currentUserLatLng={this.state.currentUserLatLng}
                 autoCompleteService={autoCompleteService}
                 geoCoderService={geoCoderService}
-                //mapsApi={this.state.mapsApi}
                 searchLoaded={this.searchHasLoaded}
                 map={map}
                 addSingleMarker={this.addSingleMarker}
                 updateCurrentUserLatLng={this.updateCurrentUserLatLng}
-                //mapsLoaded={this.state.mapsLoaded}
               />
               <SearchButton
                 currentUserLatLng={this.state.currentUserLatLng}
                 mapsApi={mapsApi}
+                addPlaces={this.addPlaces}
                 searchLoaded={this.state.searchLoaded}
                 placesService={placesService}
                 directionService={directionService}
                 updateSearchResults={this.updateSearchResults}
+                clearMarkers={this.clearMarkers}
               />
             </div>
           ) : null}
@@ -122,7 +134,7 @@ class MapContainer extends Component {
                 key: keys.key,
                 libraries: ["places", "directions"],
               }}
-              defaultZoom={11}
+              defaultZoom={12}
               defaultCenter={{ lat: coord.lat, lng: coord.lng }}
               yesIWantToUseGoogleMapApiInternals={true}
               onGoogleApiLoaded={({ map, maps }) =>
@@ -137,16 +149,19 @@ class MapContainer extends Component {
                   lng={marker.lng}
                 />
               ))}
+              {this.state.placeMarkers.map((marker) => {
+                const { name, lat, lng, id } = marker;
+                return <PlaceMarker key={id} name={name} lat={lat} lng={lng} />;
+              })}
             </GoogleMapReact>
           </div>
 
-          {/* Results section */}
           {searchResults.length > 0 ? (
             <>
               <Divider />
               <div className="d-flex flex-column container-fluid justify-content-center">
                 <h1 className="w-100 fw-md">Boba Near You!</h1>
-                <div className="d-flex flex-wrap container-fluid">
+                <div className="row justify-content-md-center">
                   {searchResults.map((result, key) => (
                     <PlaceCard info={result} key={key} />
                   ))}

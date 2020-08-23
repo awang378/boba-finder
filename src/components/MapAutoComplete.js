@@ -40,8 +40,8 @@ class MapAutoComplete extends Component {
       };
       autoCompleteService.getQueryPredictions(searchQuery, (response) => {
         if (response) {
-          const options = response.map((resp) => {
-            return { ...resp, value: resp.description };
+          const options = response.map((res) => {
+            return { ...res, value: res.description };
           });
           this.setState({ options, suggestion: response });
         }
