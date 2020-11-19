@@ -1,5 +1,7 @@
 # Boba Finder
 
+[![Netlify Status](https://api.netlify.com/api/v1/badges/4fb4e216-91f9-4e7f-b329-69cbfbb532d3/deploy-status)](https://app.netlify.com/sites/boba-finder/deploys)
+
 https://boba-finder.netlify.app
 
 ![Alt Text](./boba.gif)
@@ -11,6 +13,10 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 Add a `keys.js` config file and add in your [API key](https://developers.google.com/maps/documentation/javascript/get-api-key)
 
 In the project directory, you can run:
+
+### `npm install`
+
+Installs all dependencies 
 
 ### `npm start`
 
